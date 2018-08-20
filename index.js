@@ -1,5 +1,8 @@
-var gutil = require('gulp-util');
-var PluginError = gutil.PluginError;
+var fancyLog = require('fancy-log');
+var PluginError = require('plugin-error');
+var replaceExt = require('replace-ext');
+var c = require('ansi-colors');
+var Vinyl = require('vinyl');
 var through = require('through2');
 var defaults = require('lodash.defaults');
 var parseCss = require('css-parse');
@@ -20,7 +23,7 @@ module.exports = function(options) {
   // Log info only when 'options.log' is set to true
   var log = function(message) {
     if (options.log) {
-      gutil.log(message);
+      fancyLog(message);
     }
   };
 
@@ -343,20 +346,20 @@ module.exports = function(options) {
 
     // Define the new file extension
     if (options.ext) {
-      file.path = gutil.replaceExtension(file.path, options.ext);
+      file.path = replaceExt(file.path, options.ext);
     }
 
     // Write the new file
     file.contents = new Buffer(strStyles);
-    log(gutil.colors.cyan('File ' + filename + ' created.'));
+    log(c.cyan('File ' + filename + ' created.'));
 
     if (options.use_external && processedCSS.media.length !== 0) {
-      var f = new gutil.File({
+      var f = new Vinyl({
         base: file.base,
         path: extFilename,
         contents: new Buffer(strMediaStyles)
       });
-      log(gutil.colors.cyan('File ' + extFilename + ' created.'));
+      log(c.cyan('File ' + extFilename + ' created.'));
     }
     this.push(file);
     if (options.use_external && processedCSS.media.length !== 0) {

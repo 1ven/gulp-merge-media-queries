@@ -1,5 +1,4 @@
 .DS_Store
-node_modules
+node_modules/
 *.log
-test
-/nbproject/private/
+.idea/
